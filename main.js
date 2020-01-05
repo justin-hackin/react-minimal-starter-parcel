@@ -1,22 +1,25 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
 import ReactDOM from 'react-dom';
 
-const Hello = ({who}) => <p>Hello {who}</p>;
+const fileName = './package.json';
 
-Hello.propTypes = {
-  who: PropTypes.string.isRequired
-};
+class App extends React.Component {
+  async componentDidMount() {
+    // this works
+    const json = await import('./package.json');
 
-const App = () => (
-  <>
-    <Hello who="React Minimal Starter Parcel" />
-    <p>Run this with</p>
-    <code>npm start</code>
-    <p>Build it with</p>
-    <code>npm run build</code>
-  </>
-);
+    // this does not
+    // const json = await import(fileName);
+    this.setState({ json });
+  }
+
+  render() {
+    const { json } = this.state || {};
+    if (!json) { return false; }
+    return (<div>
+      {JSON.stringify(json, null, 2)}
+    </div>);
+  }
+}
 
 ReactDOM.render(<App />, document.querySelector('#app'));
